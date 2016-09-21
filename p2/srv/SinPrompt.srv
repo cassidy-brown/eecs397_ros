@@ -1,0 +1,4 @@
+Float64 amplitude
+Float64 frequency
+---
+bool success
