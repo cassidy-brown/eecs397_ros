@@ -1,24 +1,25 @@
 // sin_commander node: 
 // based on minimal_controller
-// subscribes to "amp_cmd" and "freq_cmd"
+// advertises "sin_configuration" service which gets amplitude and frequency commands
 // publishes "vel_cmd" 
 #include<ros/ros.h> 
 #include<std_msgs/Float64.h> 
 #include<math.h>
-#include<p2::SinPrompt.h>
+#include<p2/SinPrompt.h>
 
 //global variables for callback functions to populate for use in main program 
 std_msgs::Float64 g_amp;
 std_msgs::Float64 g_freq; 
 std_msgs::Float64 g_sin_vel_cmd;
 
-bool callback(p2::SinPromptRequest& request, p2:SinPromptResponse& response) {
-    ROS_INFO("received amplitude value is: %f", message_holder.data);
-    g_amp.data = request.data.amplitude; // post the received data in a global var for access by 
-    //main prog. 
-    g_freq.data = request.data.frequency;
+// Callback for sin_configuration service which sets the global amplitude and frequency variables based on the passed in request
+bool callback(p2::SinPromptRequest& request, p2::SinPromptResponse& response) {
+    ROS_INFO("received amplitude value is: %f", request.amplitude);
+    ROS_INFO("received frequency value is: %f", request.frequency);
+    g_amp.data = request.amplitude; // post the received data in a global var for access by main prog. 
+    g_freq.data = request.frequency;
 
-    response.data.success = true; //probably don't need anything in the response
+    response.success = true; //probably don't need anything in the response, but here it is for good measure
 }
 
 
@@ -26,9 +27,14 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "sin_commander_p2"); //name this node 
     // when this compiled code is run, ROS will recognize it as a node called "sin_commander" 
     ros::NodeHandle nh; // node handle 
-    //set up service to listen for amplitude and frequency
-    ros::ServiceServer service = n.advertiseService("sin_prompt", callback);
-    //publish a velocity command computed by this controller; 
+
+    // SERVICE
+    //set up service called sin_configuration to listen for amplitude and frequency
+    ros::ServiceServer service = nh.advertiseService("sin_configuration", callback);
+    // everything else service-related happens in the callback and in the client
+
+    // PUBLISHER
+    // publish a velocity command computed by this controller; 
     ros::Publisher my_publisher_object = nh.advertise<std_msgs::Float64>("vel_cmd_p2", 1);
     double Kv = 2.0; // velocity feedback gain 
     double dt_controller = 0.10; //specify 10Hz controller sample rate (pretty slow, but 

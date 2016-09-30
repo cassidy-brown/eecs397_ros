@@ -2,6 +2,7 @@
 // based on minimal_controller
 // subscribes to "amp_cmd" and "freq_cmd"
 // publishes "vel_cmd" 
+#include<iostream>
 #include<ros/ros.h> 
 #include<std_msgs/Float64.h> 
 #include<p2/SinPrompt.h>
@@ -9,25 +10,23 @@
 int main(int argc, char **argv) {
     ros::init(argc, argv, "sin_prompt");
     ros::NodeHandle n;
-    ros::ServiceClient client = n.serviceClient<p2::SinPrompt>("sin_prompt");
-    ps::SinPrompt srv;
-    double amplitude;
-    double frequency;
-    while (ros::ok()) {
-        cout<<endl;
-        cout << "enter desired amplitude: ";
-        cin>>amplitude;
-        cout<<endl;
-        cout << "enter desired frequency: ";
-        cin>>frequency;
+    ros::ServiceClient client = n.serviceClient<p2::SinPrompt>("sin_commander_p2");
+    p2::SinPrompt srv;
 
-	srv.data.amplitude = amplitude;
-	srv.data.frequency = frequency;
+    while (ros::ok()) {
+        std::cout<<"\n";
+        std::cout << "enter desired amplitude: ";
+        std::cin>> srv.request.amplitude;
+        std::cout<<"\n";
+        std::cout << "enter desired frequency: ";
+        std::cin>> srv.request.frequency;
+
 
   	if (client.call(srv)){
-	    ROS_ERROR("Failed to call service lookup_by_name");
+	    ROS_ERROR("Failed to call service sin_commander_p2");
             return 1;
-        }
+        } else {
+	    ROS_INFO("Call made; success: %s", srv.response.success);
     }
     return 0; // should never get here, unless roscore dies 
 } 

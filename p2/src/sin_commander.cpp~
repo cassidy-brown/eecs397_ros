@@ -5,20 +5,21 @@
 #include<ros/ros.h> 
 #include<std_msgs/Float64.h> 
 #include<math.h>
-#include<p2::SinPrompt>
+#include<p2/SinPrompt.h>
 
 //global variables for callback functions to populate for use in main program 
 std_msgs::Float64 g_amp;
 std_msgs::Float64 g_freq; 
 std_msgs::Float64 g_sin_vel_cmd;
 
-bool callback(p2::SinPromptRequest& request, p2:SinPromptResponse& response) {
-    ROS_INFO("received amplitude value is: %f", message_holder.data);
-    g_amp.data = request.data.amplitude; // post the received data in a global var for access by 
+bool callback(p2::SinPromptRequest& request, p2::SinPromptResponse& response) {
+    ROS_INFO("received amplitude value is: %f", request.amplitude);
+    ROS_INFO("received frequency value is: %f", request.frequency);
+    g_amp.data = request.amplitude; // post the received data in a global var for access by 
     //main prog. 
-    g_freq.data = request.data.frequency;
+    g_freq.data = request.frequency;
 
-    response.data.success = true; //probably don't need anything in the response
+    response.success = true; //probably don't need anything in the response
 }
 
 

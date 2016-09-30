@@ -7,6 +7,7 @@ project(p2)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -50,11 +51,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES 
+  SinPrompt.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -64,10 +64,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES 
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -101,7 +101,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES p2
-#  CATKIN_DEPENDS roscpp std_msgs
+  CATKIN_DEPENDS roscpp std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -127,20 +127,21 @@ include_directories(
 # add_dependencies(p2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a cpp executable
+add_executable(sin_prompt_p2 src/sin_prompt.cpp)
 add_executable(minimal_simulator_p2 src/minimal_simulator.cpp)
 add_executable(minimal_controller_p2 src/minimal_controller.cpp)
 add_executable(sin_commander_p2 src/sin_commander.cpp)
-add_executable(sin_prompt_p2 src/sin_prompt.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(minimal_nodes_node minimal_nodes_generate_messages_cpp)
+add_dependencies(sin_commander_p2 ${catkin_EXPORTED_TARGETS})
+add_dependencies(sin_prompt_p2 ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
+target_link_libraries(sin_prompt_p2  ${catkin_LIBRARIES} )
 target_link_libraries(minimal_simulator_p2  ${catkin_LIBRARIES} )
 target_link_libraries(minimal_controller_p2  ${catkin_LIBRARIES} )
 target_link_libraries(sin_commander_p2  ${catkin_LIBRARIES} )
-target_link_libraries(sin_prompt_p2  ${catkin_LIBRARIES} )
 
 #############
 ## Install ##

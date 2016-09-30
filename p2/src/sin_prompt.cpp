@@ -1,31 +1,33 @@
-// sin_commander node: 
-// based on minimal_controller
-// subscribes to "amp_cmd" and "freq_cmd"
-// publishes "vel_cmd" 
+// sin_prompt
+// client which prompts for a sin wave's amplitude and frequency
+#include<iostream>
 #include<ros/ros.h> 
-#include<std_msgs/Float64.h> 
 #include<p2/SinPrompt.h>
 
 int main(int argc, char **argv) {
+    // Initialize sin_prompt node
     ros::init(argc, argv, "sin_prompt");
+    // initialize node handle
     ros::NodeHandle n;
-    ros::ServiceClient client = n.serviceClient<p2::SinPrompt>("sin_prompt");
+    // Attach client to sin_configuration service (advertised in sin_commander)
+    ros::ServiceClient client = n.serviceClient<p2::SinPrompt>("sin_configuration");
+    // Create a service object
     p2::SinPrompt srv;
-    double amplitude;
-    double frequency;
+
     while (ros::ok()) {
-        cout<<endl;
-        cout << "enter desired amplitude: ";
-        cin>>amplitude;
-        cout<<endl;
-        cout << "enter desired frequency: ";
-        cin>>frequency;
+        // Get amplitude and frequency from user
+        // Assign values in service request
+        std::cout<<"\n";
+        std::cout << "enter desired amplitude: ";
+        std::cin>> srv.request.amplitude;
+        std::cout << "enter desired frequency: ";
+        std::cin>> srv.request.frequency;
 
-	srv.data.amplitude = amplitude;
-	srv.data.frequency = frequency;
-
-  	if (client.call(srv)){
-	    ROS_ERROR("Failed to call service lookup_by_name");
+        // Call the client with the requested values
+      	if (!client.call(srv)){
+            ROS_INFO("Call made; success: %d", srv.response.success);
+        } else {
+    	    ROS_ERROR("Failed to call service sin_configuration");
             return 1;
         }
     }

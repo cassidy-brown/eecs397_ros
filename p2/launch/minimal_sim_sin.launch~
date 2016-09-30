@@ -1,0 +1,5 @@
+<launch> 
+<node name= "simu" pkg= "minimal_nodes" type= "minimal_simulator" /> 
+<node name= "controller" pkg= "minimal_nodes" type= "minimal_controller" /> 
+<node name= "sin" pkg= "minimal_nodes" type= "sin_commander" /> 
+</launch> 
