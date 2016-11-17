@@ -19,6 +19,8 @@
 #include <fstream>
 using namespace std;
 
+#define BASE_HEIGHT 1.099893    // The robot is positioned on a base that is 1.099893m high
+
 int main(int argc, char **argv) {
     ros::init(argc, argv, "ur10_reachability");
     Eigen::Vector3d p;
@@ -43,11 +45,11 @@ int main(int argc, char **argv) {
     a_tool_des.linear() = R_des;
     //a_tool_des.translation() << x_des,0,0;
     double x_des,y_des,z_des;
-    double x_min = 0.4;
-    double x_max = 1.5;
-    double y_min = -1.5;
-    double y_max = 1.0;
-    double z_poi[6] = {0.0, 0.724275, 0.950316, 0.903960, 0.750201, 1.099893};  //z positions of interest
+    double x_min = -1.25;
+    double x_max = 1.25;
+    double y_min = -1.25;
+    double y_max = 1.25;
+    double z_poi[6] = {0.0, 0.724275, 0.950316, 0.903960, 0.750201};  //z positions of interest
     double dx = 0.05;
     double dy = 0.05;
     Eigen::Vector3d p_des;
@@ -56,7 +58,7 @@ int main(int argc, char **argv) {
 
     // Loop through z positions of interest
     for(int i = 0; i < 6; i++){
-        double z_des = z_poi[i];
+        double z_des = z_poi[i] - BASE_HEIGHT;
     
         // Check full range of x and y positions at specified z
         for (double x_des = x_min;x_des<x_max;x_des+=dx) {
