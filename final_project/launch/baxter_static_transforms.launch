@@ -1,0 +1,5 @@
+<launch>
+<node pkg="tf" type="static_transform_publisher" name="system_ref_frame" args="0 0 -0.91 0 0 0 1 torso system_ref_frame 100" />
+<node pkg="tf" type="static_transform_publisher" name="generic_gripper_frame" args="0 0 0 0 0 0 1 right_gripper generic_gripper_frame 100" />
+<node name="from_torso_to_camera_link_static_tf" pkg="tf" type="static_transform_publisher" args="0.2 0.1 0.8 0 1.5 0 base camera_link 50" />		<!--Args needs to be fine tuned -->
+</launch>

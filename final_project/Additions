@@ -1,0 +1,12 @@
+Additions
+
+Part_3/object_finder/src/object_finder_as
+154: changed z arguments
+	table_ht = pclUtils_.find_table_height(0.5, 1, -0.5, 0.5, -0.3, 0.3, 0.005);							
+234: changed frame for camera
+	tfListener.lookupTransform("base", "camera_rgb_optical_frame", ros::Time(0), stf_kinect_wrt_base);
+
+Part_5/cartesian_planner/launch/baxter_static_transforms
+Added third transform node (from_torso_to_camera_link_static_tf): need to fine tune args
+	<node name="from_torso_to_camera_link_static_tf" pkg="tf" type="static_transform_publisher" args="0.2 0.1 0.8 0 1.5 0 base camera_link 50" />
+
